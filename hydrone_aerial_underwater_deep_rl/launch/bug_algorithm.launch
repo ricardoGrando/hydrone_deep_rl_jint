@@ -1,0 +1,28 @@
+<launch>
+  <arg name="root_dir" default="/home/ricardo/"/>  
+  <arg name="file_dir" default="sac_stage_1/sac_env1_2d_3_layers"/>
+  <arg name="testing" default="false"/> 
+  <arg name="world" default="stage_1_aerial"/> 
+  <arg name="graphic_int" default="true"/> 
+  <arg name="max_lasers" default="false"/> 
+  <arg name="min_lasers" default="true"/> 
+  <arg name="e_path" default="false"/> 
+
+  <include file="$(find hydrone_aerial_underwater_ddpg)/launch/hydrone_aerial_deep_rl.launch" >
+    <arg name="world_name" value="$(arg world)" />
+    <arg name="gui" value="$(arg graphic_int)" />
+    <arg name="maxi_lasers" value="$(arg max_lasers)" />
+    <arg name="mini_lasers" value="$(arg min_lasers)" />
+    <param name="eval_path"  value="$(arg e_path)"/>
+  </include>
+
+  <node pkg="hydrone_aerial_underwater_ddpg" type="bug_algorithm.py" name="bug_algorithm" output="screen" />
+
+  <node pkg="hydrone_aerial_underwater_ddpg" type="store_disk.py" name="store_disk" output="screen">
+    <param name="file_path"  value="$(arg file_dir)"/>
+    <param name="root_path"  value="$(arg root_dir)"/>
+    <param name="test_param"  value="$(arg testing)"/>
+    <param name="eval_path"  value="$(arg e_path)"/>
+  </node>
+  <node pkg="hydrone_aerial_underwater_ddpg" type="wind.py" name="wind_node" output="screen"></node>
+</launch>
